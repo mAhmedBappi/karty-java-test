@@ -3,6 +3,7 @@ package com.karty.kartyjavatest.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.karty.kartyjavatest.config.RateLimiterConfig;
 import com.karty.kartyjavatest.dto.DeleteResponse;
+import com.karty.kartyjavatest.dto.ProductDto;
 import com.karty.kartyjavatest.exceptions.NotFoundException;
 import com.karty.kartyjavatest.model.Product;
 import com.karty.kartyjavatest.service.ProductsService;
@@ -34,7 +35,7 @@ public class ProductsController {
     }
 
     @PostMapping("")
-    public ResponseEntity<Object> create(@Valid @RequestBody Product product) throws JsonProcessingException {
+    public ResponseEntity<Object> create(@Valid @RequestBody ProductDto product) throws JsonProcessingException {
         // Rate Limiting - 1 API call per 1 minute
         if (bucket.tryConsume(1)) {
             return ResponseEntity.ok().body(this.productsService.create(product));
@@ -68,8 +69,8 @@ public class ProductsController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> update(@Valid @RequestBody Product product, @PathVariable Long id) throws JsonProcessingException {
-        return ResponseEntity.ok().body(this.productsService.update(product, id));
+    public ResponseEntity<Object> update(@Valid @RequestBody ProductDto dto, @PathVariable Long id) throws JsonProcessingException {
+        return ResponseEntity.ok().body(this.productsService.update(dto, id));
     }
 
     @DeleteMapping("/{id}")

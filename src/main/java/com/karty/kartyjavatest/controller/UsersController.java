@@ -1,7 +1,7 @@
 package com.karty.kartyjavatest.controller;
 
 import com.karty.kartyjavatest.dto.DeleteResponse;
-import com.karty.kartyjavatest.model.User;
+import com.karty.kartyjavatest.dto.UserDto;
 import com.karty.kartyjavatest.service.UsersService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,13 +19,13 @@ public class UsersController {
     }
 
     @PostMapping("")
-    public ResponseEntity<Object> create(@Valid @RequestBody User user) {
-        return ResponseEntity.ok().body(this.usersService.create(user));
+    public ResponseEntity<Object> create(@Valid @RequestBody UserDto dto) {
+        return ResponseEntity.ok().body(this.usersService.create(dto));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Object> login(@Valid @RequestBody User user) {
-        return this.usersService.login(user);
+    public ResponseEntity<Object> login(@Valid @RequestBody UserDto dto) {
+        return this.usersService.login(dto);
     }
 
     @GetMapping("")

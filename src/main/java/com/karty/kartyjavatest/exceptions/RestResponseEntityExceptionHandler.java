@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -196,6 +197,19 @@ public class RestResponseEntityExceptionHandler extends BaseExceptionHandler {
 
         List<String> errors = new ArrayList<>();
         errors.add("error.auth-token-expired");
+
+        String translatedMessage = getTranslatedMessage(ex.getMessage(), ex.getStackTrace());
+        ApiError error = new ApiError(HttpStatus.UNAUTHORIZED, translatedMessage, errors);
+        return new ResponseEntity<>(error, error.getStatus());
+    }
+
+    @ExceptionHandler({DataIntegrityViolationException.class})
+    public ResponseEntity<Object> handleDataIntegrityViolationException(final DataIntegrityViolationException ex) {
+        logger.error(ExceptionUtils.getMessage(ex));
+        logger.trace(ExceptionUtils.getStackTrace(ex));
+
+        List<String> errors = new ArrayList<>();
+        errors.add("error.data-validation");
 
         String translatedMessage = getTranslatedMessage(ex.getMessage(), ex.getStackTrace());
         ApiError error = new ApiError(HttpStatus.UNAUTHORIZED, translatedMessage, errors);

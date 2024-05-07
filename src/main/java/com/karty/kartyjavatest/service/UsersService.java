@@ -1,16 +1,17 @@
 package com.karty.kartyjavatest.service;
 
+import com.karty.kartyjavatest.dto.UserDto;
 import com.karty.kartyjavatest.model.User;
 import org.springframework.http.ResponseEntity;
 
 public interface UsersService {
-    User create(User user);
+    User create(UserDto dto);
 
-    ResponseEntity<Object> login(User user);
+    ResponseEntity<Object> login(UserDto dto);
 
     Iterable<User> retrieveAll();
 
     User retrieveById(Long id);
 
-    boolean delete(Long id);
+    void delete(Long id);
 }

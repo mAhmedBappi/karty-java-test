@@ -1,6 +1,7 @@
 package com.karty.kartyjavatest.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.karty.kartyjavatest.dto.ProductDto;
 import com.karty.kartyjavatest.model.Product;
 import com.karty.kartyjavatest.repository.ProductsRepository;
 import com.karty.kartyjavatest.utility.Utility;
@@ -26,8 +27,8 @@ public class ProductsServiceImpl implements ProductsService {
     }
 
     @Override
-    public Product create(Product product) throws JsonProcessingException {
-        product = productsRepository.save(product);
+    public Product create(ProductDto dto) throws JsonProcessingException {
+        Product product = productsRepository.save(new Product(dto));
         jedis.jsonSet(createRedisKey(product.getId()), Utility.objectMapper().writeValueAsString(product));
         return product;
     }
@@ -74,26 +75,30 @@ public class ProductsServiceImpl implements ProductsService {
     }
 
     @Override
-    public Product update(Product product, Long id) throws JsonProcessingException {
-        if (!productsRepository.existsById(id)) {
-            throw new IllegalArgumentException("Not Found");
+    public Product update(ProductDto dto, Long id) throws JsonProcessingException {
+        Product product = productsRepository.findById(id).orElse(null);
+
+        if (product == null) {
+            throw new IllegalArgumentException("Product: " + id + " not found");
         }
 
         product.setId(id);
+        product.update(dto);
+
         product = productsRepository.save(product);
         jedis.jsonSet(createRedisKey(product.getId()), Utility.objectMapper().writeValueAsString(product));
+
         return product;
     }
 
     @Override
-    public boolean delete(Long id) {
+    public void delete(Long id) {
         if (!productsRepository.existsById(id)) {
             throw new IllegalArgumentException("Not Found");
         }
 
         productsRepository.deleteById(id);
         jedis.jsonDel(createRedisKey(id));
-        return true;
     }
 
     private String createRedisKey(Long id) {
