@@ -34,4 +34,4 @@ services:
   karty-cache:
     image: redis/redis-stack-server:latest
     ports:
-      - 6378:6379
+      - 6379:6379
