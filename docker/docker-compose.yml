@@ -1,0 +1,16 @@
+version: "3.1"
+
+services:
+  karty-db:
+    image: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: karty
+    ports:
+      - 3306:3306
+    # (this is just an example, not intended to be a production configuration)
+  karty-cache:
+    image: redis/redis-stack-server:latest
+    ports:
+      - 6379:6379
