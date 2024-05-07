@@ -1,6 +1,27 @@
-version: "3.1"
+version: "3.8"
 
 services:
+  karty-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    depends_on:
+      - karty-db
+      - karty-cache
+    environment:
+      DB_HOST: karty-db
+      DB_PORT: 3306
+      DB_NAME: karty
+      DB_USER: root
+      DB_PASSWORD: root
+      CACHE_HOST: karty-cache
+      CACHE_PORT: 6379
+      BUCKET_SIZE: 1
+      BUCKET_REFILL_DURATION: 60
+      AUTH_TOKEN_EXPIRY: 1800
+    ports:
+      - 8080:8080
   karty-db:
     image: mysql
     restart: always
@@ -13,4 +34,4 @@ services:
   karty-cache:
     image: redis/redis-stack-server:latest
     ports:
-      - 6379:6379
+      - 6378:6379

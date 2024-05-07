@@ -3,7 +3,6 @@ logs/
 bin/
 .idea/
 .settings/
-*.jar
 .mvn/
 
 

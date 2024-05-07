@@ -1,6 +1,7 @@
 package com.karty.kartyjavatest.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.karty.kartyjavatest.config.RateLimiterConfig;
 import com.karty.kartyjavatest.exceptions.NotFoundException;
 import com.karty.kartyjavatest.model.Product;
 import com.karty.kartyjavatest.service.ProductsService;
@@ -21,10 +22,11 @@ public class ProductsController {
     private final Bucket bucket;
 
     @Autowired
-    public ProductsController(ProductsService productsService) {
+    public ProductsController(ProductsService productsService, RateLimiterConfig config) {
         this.productsService = productsService;
 
-        Bandwidth limit = Bandwidth.classic(1, Refill.greedy(1, Duration.ofMinutes(1)));
+        Bandwidth limit = Bandwidth.classic(config.getBucketSize(), Refill.greedy(config.getBucketSize(),
+                Duration.ofSeconds(config.getRefillDuration())));
         this.bucket = Bucket.builder().addLimit(limit).build();
     }
 

@@ -1,5 +1,6 @@
 package com.karty.kartyjavatest.exceptions;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.hibernate.exception.ConstraintViolationException;
 import org.json.JSONException;
@@ -182,6 +183,19 @@ public class RestResponseEntityExceptionHandler extends BaseExceptionHandler {
 
         List<String> errors = new ArrayList<>();
         errors.add("error.bad-credentials");
+
+        String translatedMessage = getTranslatedMessage(ex.getMessage(), ex.getStackTrace());
+        ApiError error = new ApiError(HttpStatus.UNAUTHORIZED, translatedMessage, errors);
+        return new ResponseEntity<>(error, error.getStatus());
+    }
+
+    @ExceptionHandler({AuthTokenExpiredException.class})
+    public ResponseEntity<Object> handleAuthTokenExpiredException(final AuthTokenExpiredException ex) {
+        logger.error(ExceptionUtils.getMessage(ex));
+        logger.trace(ExceptionUtils.getStackTrace(ex));
+
+        List<String> errors = new ArrayList<>();
+        errors.add("error.auth-token-expired");
 
         String translatedMessage = getTranslatedMessage(ex.getMessage(), ex.getStackTrace());
         ApiError error = new ApiError(HttpStatus.UNAUTHORIZED, translatedMessage, errors);

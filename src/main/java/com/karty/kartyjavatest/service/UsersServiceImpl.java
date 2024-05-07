@@ -4,6 +4,7 @@ import com.karty.kartyjavatest.exceptions.AlreadyExistsException;
 import com.karty.kartyjavatest.exceptions.NotFoundException;
 import com.karty.kartyjavatest.jwt.JwtTokenUtil;
 import com.karty.kartyjavatest.model.User;
+import com.karty.kartyjavatest.model.UserInfoDetails;
 import com.karty.kartyjavatest.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -11,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -46,11 +46,11 @@ public class UsersServiceImpl implements UsersService {
         Authentication authenticate = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
 
-        user = (User) authenticate.getPrincipal();
+        UserInfoDetails userDetails = (UserInfoDetails) authenticate.getPrincipal();
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.AUTHORIZATION, jwtTokenUtil.generateToken(user.getUsername()))
-                .body(user);
+                .body(userDetails);
     }
 
     @Override
