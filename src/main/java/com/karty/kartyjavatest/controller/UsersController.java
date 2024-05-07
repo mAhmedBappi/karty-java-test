@@ -1,5 +1,6 @@
 package com.karty.kartyjavatest.controller;
 
+import com.karty.kartyjavatest.dto.DeleteResponse;
 import com.karty.kartyjavatest.model.User;
 import com.karty.kartyjavatest.service.UsersService;
 import jakarta.validation.Valid;
@@ -34,6 +35,7 @@ public class UsersController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> delete(@PathVariable Long id) {
-        return ResponseEntity.ok().body(this.usersService.delete(id));
+        this.usersService.delete(id);
+        return ResponseEntity.ok().body(new DeleteResponse("User " + id + " deleted successfully"));
     }
 }

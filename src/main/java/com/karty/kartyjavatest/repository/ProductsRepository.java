@@ -18,4 +18,8 @@ public interface ProductsRepository extends CrudRepository<Product, Long> {
     @Override
     @Query("select product from Product product where product.id = ?1 and product.deleted = false")
     Optional<Product> findById(Long id);
+
+    @Override
+    @Query("SELECT CASE WHEN COUNT(p) > 0 THEN true ELSE false END FROM Product p WHERE p.id = ?1 AND p.deleted = false")
+    boolean existsById(Long id);
 }

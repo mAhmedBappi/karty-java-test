@@ -12,7 +12,5 @@ public interface UsersService {
 
     User retrieveById(Long id);
 
-    User update(User user, Long id);
-
     boolean delete(Long id);
 }

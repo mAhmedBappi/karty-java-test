@@ -70,16 +70,6 @@ public class UsersServiceImpl implements UsersService {
     }
 
     @Override
-    public User update(User user, Long id) {
-        if (!usersRepository.existsById(id)) {
-            throw new NotFoundException(notFoundMessageStr(id));
-        }
-
-        user.setId(id);
-        return usersRepository.save(user);
-    }
-
-    @Override
     public boolean delete(Long id) {
         if (!usersRepository.existsById(id)) {
             throw new NotFoundException(notFoundMessageStr(id));

@@ -33,8 +33,27 @@ public class ProductsServiceImpl implements ProductsService {
     }
 
     @Override
-    public List<Object> retrieveAll() {
-        return jedis.keys(REDIS_KEY_PREFIX + "*").stream().map(jedis::jsonGet).toList();
+    public List<Product> retrieveAll() {
+        return jedis.keys(REDIS_KEY_PREFIX + "*").stream()
+                .map(jedis::jsonGet)
+                .map(p -> Utility.objectMapper().convertValue(p, Product.class))
+                .toList();
+    }
+
+    @Override
+    public List<Product> retrieveAllByNameAndDescription(String name, String description) {
+        return retrieveAll().stream().filter(p -> p.getName().equals(name) && p.getDescription().equals(description))
+                .toList();
+    }
+
+    @Override
+    public List<Product> retrieveAllByName(String name) {
+        return retrieveAll().stream().filter(p -> p.getName().equals(name)).toList();
+    }
+
+    @Override
+    public List<Product> retrieveAllByDescription(String description) {
+        return retrieveAll().stream().filter(p -> p.getDescription().equals(description)).toList();
     }
 
     @Override

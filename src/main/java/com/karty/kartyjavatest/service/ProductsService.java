@@ -8,7 +8,13 @@ import java.util.List;
 public interface ProductsService {
     Product create(Product product) throws JsonProcessingException;
 
-    List<Object> retrieveAll();
+    List<Product> retrieveAll();
+
+    List<Product> retrieveAllByNameAndDescription(String name, String description);
+
+    List<Product> retrieveAllByName(String name);
+
+    List<Product> retrieveAllByDescription(String description);
 
     Product retrieveById(Long id) throws JsonProcessingException;
 
